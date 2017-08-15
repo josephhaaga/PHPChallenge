@@ -47,14 +47,17 @@ foreach($csv as $key=>$value){
 }
 echo '</pre>';
 
-//
-// $sql = "INSERT INTO prices (record_Date,	record_Time,	FOOLX_USD,	FOOLX_SGD,	TMFGX_USD,	TMFGX_SGD,	TMFFIB_USD,	TMFFIB_SGD)
-// VALUES ('John', 'Doe', 'john@example.com')";
-//
-// if ($conn->query($sql) === TRUE) {
-//     echo "New record created successfully";
-// } else {
-//     echo "Error: " . $sql . "<br>" . $conn->error;
-// }
-//
-// $conn->close();
+
+$sql = '';
+foreach($csv as $key=>$value){
+  $sql .= "INSERT INTO prices (record_Date, record_Time, FOOLX_USD, FOOLX_SGD, TMFGX_USD, TMFGX_SGD, TMFFIB_USD, TMFFIB_SGD)
+  VALUES ('".$value[0]."', '".$value[1]."', '".$value[2]."', '".$value[3]."', '".$value[4]."','".$value[5]."','".$value[6]."','".$value[7]."');";
+}
+
+if ($conn->multi_query($sql) === TRUE) {
+    echo "Records inserted into Database!";
+} else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+}
+
+$conn->close();
