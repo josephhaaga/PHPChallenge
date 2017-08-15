@@ -1,9 +1,10 @@
 <?php
 
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$dbname = "php_challenge";
+include "functions.php";
+include "credentials.php";
+
+echo '<html><head><head><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script><link rel="stylesheet" type="text/css" href="style.css">
+</head><body>';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -11,19 +12,42 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
-
-// test GET
-// $sql = "SELECT * FROM prices WHERE record_Date = 20170724";
-$sql = "SELECT DISTINCT record_Date FROM prices ";
+$sql = "SELECT * FROM prices";
 $result = $conn->query($sql);
+$table =  '<table>';
+$dates = array();
 if ($result->num_rows > 0) {
-    // output data of each row
-    while($row = $result->fetch_assoc()) {
-      // record_Date, record_Time, FOOLX_USD, FOOLX_SGD, TMFGX_USD, TMFGX_SGD, TMFFIB_USD, TMFFIB_SGD
-        echo "Date: " . $row["record_Date"]. " - Time: " . $row["record_Time"]. " " .  "<br>";
-    }
+  while($row = $result->fetch_assoc()) {
+    array_push($dates,getTheDate($row['record_Date']));
+    $table .= '<tr class="FOOLX ' . getTheDate($row['record_Date']) . '">';
+    $table .= '<td>' . getTheDate($row['record_Date']) . '</td><td>' . $row['FOOLX_USD'] . '</td><td>' . $row['FOOLX_SGD'] . '</td>';
+    $table .= '</tr>';
+
+    $table .= '<tr class="TMFGX ' . getTheDate($row['record_Date']) . '">';
+    $table .= '<td>' . getTheDate($row['record_Date']) . '</td><td>' . $row['TMFGX_USD'] . '</td><td>' . $row['TMFGX_SGD'] . '</td>';
+    $table .= '</tr>';
+
+    $table .= '<tr class="TMFFIB ' . getTheDate($row['record_Date']) . '">';
+    $table .= '<td>' . getTheDate($row['record_Date']) . '</td><td>' . $row['TMFFIB_USD'] . '</td><td>' . $row['TMFFIB_SGD'] . '</td>';
+    $table .= '</tr>';
+  }
+  $table .= '</table>';
 } else {
     echo "0 results";
 }
 $conn->close();
+
+$dates = array_unique($dates);
+
+$ticker_select = '<select class="tickers"><option value="all">All Tickers</option><option value="FOOLX">FOOLX</option>'.
+'<option value="TMFGX">TMFGX</option><option value="TMFFIB">TMFFIB</option></select>';
+$date_select = '<select class="dates"><option value="all">All Dates</option>';
+foreach($dates as $key=>$value){
+  $date_select .= '<option value="' . $value . '">' . $value . '</option>';
+}
+$date_select .= '</select>';
+$controls = $date_select . $ticker_select;
+echo $controls;
+echo $table;
+
+echo '<script type="text/javascript" src="interaction.js"></body></html>';

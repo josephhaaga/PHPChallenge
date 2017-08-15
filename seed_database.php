@@ -1,9 +1,7 @@
 <?php
 
-$servername = "localhost";
-$username = "root";
-$password = "root";
-$dbname = "php_challenge";
+include "functions.php";
+include "credentials.php";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -11,12 +9,9 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-function getTheDate($k){
-  return (substr($k[0],0,4).'-'.substr($k[0],4,2).'-'.substr($k[0],6,2));
-}
 
 $csv = array_slice(array_map('str_getcsv', file('./data/provided_data.csv')),1);
-$unique_dates = array_unique(array_map("getTheDate", $csv));
+$unique_dates = array_unique(array_map("getTheDateMap", $csv));
 
 // $exchange_rate = json_decode(file_get_contents("http://api.fixer.io/latest?base=USD&symbols=SGD"));
 // echo '$1 USD = S$'.round($exchange_rate->rates->SGD, 2).' SGD';
@@ -29,7 +24,7 @@ foreach($unique_dates as $key=>$value){
 
 echo '<pre>';
 foreach($csv as $key=>$value){
-  $date = getTheDate($value);
+  $date = getTheDateMap($value);
 
   $foolx_price = (floatval(substr($value[2],1)));
   $foolx_price_in_sgd = ($foolx_price * $rates[$date]);
