@@ -11,28 +11,41 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
 function getTheDate($k){
-  // return 0;
   return (substr($k[0],0,4).'-'.substr($k[0],4,2).'-'.substr($k[0],6,2));
 }
+
+$csv = array_slice(array_map('str_getcsv', file('./data/provided_data.csv')),1);
+$unique_dates = array_unique(array_map("getTheDate", $csv));
 
 // $exchange_rate = json_decode(file_get_contents("http://api.fixer.io/latest?base=USD&symbols=SGD"));
 // echo '$1 USD = S$'.round($exchange_rate->rates->SGD, 2).' SGD';
 
-$csv = array_slice(array_map('str_getcsv', file('./data/provided_data.csv')),1);
-// echo '<pre>';
-// echo 'AHHHHH';
+$rates = array();
 
+foreach($unique_dates as $key=>$value){
+  $rates[$value] = json_decode(file_get_contents("http://api.fixer.io/".$value."?base=USD&symbols=SGD"))->rates->SGD;
+}
 
-//
-// foreach(array_slice($csv, 1) as $key=>$value){
-// }
-// echo '</pre>';
+echo '<pre>';
+foreach($csv as $key=>$value){
+  $date = getTheDate($value);
 
-$unique_dates = array_unique(array_map("getTheDate", $csv));
+  $foolx_price = (floatval(substr($value[2],1)));
+  $foolx_price_in_sgd = ($foolx_price * $rates[$date]);
+  $csv[$key][5] = round($foolx_price_in_sgd,2);
 
-print_r($dates);
+  $tmfgx_price = (floatval(substr($value[3],1)));
+  $tmfgx_price_in_sgd = ($tmfgx_price * $rates[$date]);
+  $csv[$key][6] = round($tmfgx_price_in_sgd,2);
+
+  $tmffib_price = (floatval(substr($value[4],1)));
+  $tmffib_price_in_sgd = ($tmffib_price * $rates[$date]);
+  $csv[$key][7] = round($tmffib_price_in_sgd,2);
+
+  print_r($csv[$key]);
+}
+echo '</pre>';
 
 //
 // $sql = "INSERT INTO prices (record_Date,	record_Time,	FOOLX_USD,	FOOLX_SGD,	TMFGX_USD,	TMFGX_SGD,	TMFFIB_USD,	TMFFIB_SGD)
