@@ -1,10 +1,5 @@
 <?php
 
-// $exchange_rate = json_decode(file_get_contents("http://api.fixer.io/latest?base=USD&symbols=SGD"));
-//
-// echo '$1 USD = S$'.round($exchange_rate->rates->SGD, 2).' SGD';
-
-
 $servername = "localhost";
 $username = "root";
 $password = "root";
@@ -18,13 +13,17 @@ if ($conn->connect_error) {
 }
 
 
-// parse existing data
-
-
-
-
 // test GET
-$sql = "SELECT * FROM prices";
+// $sql = "SELECT * FROM prices WHERE record_Date = 20170724";
+$sql = "SELECT DISTINCT record_Date FROM prices ";
 $result = $conn->query($sql);
-
-print_r($result);
+if ($result->num_rows > 0) {
+    // output data of each row
+    while($row = $result->fetch_assoc()) {
+      // record_Date, record_Time, FOOLX_USD, FOOLX_SGD, TMFGX_USD, TMFGX_SGD, TMFFIB_USD, TMFFIB_SGD
+        echo "Date: " . $row["record_Date"]. " - Time: " . $row["record_Time"]. " " .  "<br>";
+    }
+} else {
+    echo "0 results";
+}
+$conn->close();
