@@ -1,6 +1,7 @@
 This is a PHP coding challenge
 
-##Deployment Instructions##
+## Deployment Instructions
+
 1. navigate to project directory and run `zip -r package.zip .`
 2. upload package.zip to target destination
 3. unzip, and set up a MySQL database
