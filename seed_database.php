@@ -21,24 +21,23 @@ $rates = array();
 foreach($unique_dates as $key=>$value){
   $rates[$value] = json_decode(file_get_contents("http://api.fixer.io/".$value."?base=USD&symbols=SGD"))->rates->SGD;
 }
-
 echo '<pre>';
 foreach($csv as $key=>$value){
   $date = getTheDateMap($value);
 
-  $foolx_price = (floatval(substr($value[2],1)));
+  $foolx_price = (floatval(str_replace(',','',str_replace('"','',str_replace('$', '', $value[2])))));
   $foolx_price_in_sgd = ($foolx_price * $rates[$date]);
   $csv[$key][5] = round($foolx_price_in_sgd,2);
 
-  $tmfgx_price = (floatval(substr($value[3],1)));
+  $tmfgx_price = (floatval(str_replace(',','',str_replace('"','',str_replace('$','',$value[3])))));
   $tmfgx_price_in_sgd = ($tmfgx_price * $rates[$date]);
   $csv[$key][6] = round($tmfgx_price_in_sgd,2);
 
-  $tmffib_price = (floatval(substr($value[4],1)));
+  $tmffib_price = (floatval(str_replace(',','',str_replace('"','',str_replace('$','',$value[4])))));
   $tmffib_price_in_sgd = ($tmffib_price * $rates[$date]);
   $csv[$key][7] = round($tmffib_price_in_sgd,2);
-
   print_r($csv[$key]);
+
 }
 echo '</pre>';
 
