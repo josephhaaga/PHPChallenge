@@ -50,4 +50,4 @@ $controls = $date_select . $ticker_select;
 echo $controls;
 echo $table;
 
-echo '<script type="text/javascript" src="interaction.js"></body></html>';
+echo '<script type="text/javascript" src="interaction.js"></script></body></html>';
