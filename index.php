@@ -14,14 +14,11 @@ if ($conn->connect_error) {
 }
 $sql = "SELECT * FROM prices";
 $result = $conn->query($sql);
-$table =  '<table>';
+$table =  '<table><tr><th>Date</th><th>Time</th><th>Ticker</th><th>USD</th><th>SGD</th></tr>';
 $dates = array();
 if ($result->num_rows > 0) {
   while($row = $result->fetch_assoc()) {
     array_push($dates,getTheDate($row['record_Date']));
-    echo '<pre>';
-    print_r($row);
-    echo '</pre>';
     $table .= '<tr class="FOOLX ' . getTheDate($row['record_Date']) . '">';
     $table .= '<td>' . getTheDate($row['record_Date']) . '</td><td>' . $row['record_Time'] . '</td><td>FOOLX</td><td>' . $row['FOOLX_USD'] . '</td><td>' . $row['FOOLX_SGD'] . '</td>';
     $table .= '</tr>';

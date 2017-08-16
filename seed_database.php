@@ -36,8 +36,10 @@ foreach($csv as $key=>$value){
   $tmffib_price = (floatval(str_replace(',','',str_replace('"','',str_replace('$','',$value[4])))));
   $tmffib_price_in_sgd = ($tmffib_price * $rates[$date]);
   $csv[$key][7] = round($tmffib_price_in_sgd,2);
+  // echo $foolx_price.' * '.$rates[$date].' = '.round($foolx_price_in_sgd,2)."\n";
+  // echo $tmfgx_price.' * '.$rates[$date].' = '.round($tmfgx_price_in_sgd,2)."\n";
+  // echo $tmffib_price.' * '.$rates[$date].' = '.round($tmffib_price_in_sgd,2)."\n";
   print_r($csv[$key]);
-
 }
 echo '</pre>';
 
@@ -45,7 +47,7 @@ echo '</pre>';
 $sql = '';
 foreach($csv as $key=>$value){
   $sql .= "INSERT INTO prices (record_Date, record_Time, FOOLX_USD, FOOLX_SGD, TMFGX_USD, TMFGX_SGD, TMFFIB_USD, TMFFIB_SGD)
-  VALUES ('".$value[0]."', '".$value[1]."', '".$value[2]."', '".$value[3]."', '".$value[4]."','".$value[5]."','".$value[6]."','".$value[7]."');";
+  VALUES ('".$value[0]."', '".$value[1]."', '".$value[2]."', '".$value[5]."', '".$value[3]."','".$value[6]."','".$value[4]."','".$value[7]."');";
 }
 
 if ($conn->multi_query($sql) === TRUE) {
