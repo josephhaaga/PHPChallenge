@@ -11,7 +11,7 @@ jQuery(document).ready(function(){
     render();
   });
   function render(){
-  	$("table tr").hide();
+  	$("table tr:not(.ignore)").hide();
     date_selector = (date.length > 0 ? ('.'+date) : (''));
     ticker_selector = (ticker.length > 0 ? ('.'+ticker) : (''));
     // console.log("date = "+date_selector);

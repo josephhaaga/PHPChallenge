@@ -14,7 +14,7 @@ if ($conn->connect_error) {
 }
 $sql = "SELECT * FROM prices";
 $result = $conn->query($sql);
-$table =  '<table><tr><th>Date</th><th>Time</th><th>Ticker</th><th>USD</th><th>SGD</th></tr>';
+$table =  '<table><tr class="ignore"><th>Date</th><th>Time</th><th>Ticker</th><th>USD</th><th>SGD</th></tr>';
 $dates = array();
 if ($result->num_rows > 0) {
   while($row = $result->fetch_assoc()) {
